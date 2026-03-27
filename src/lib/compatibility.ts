@@ -117,6 +117,58 @@ export function checkCompatibility(build: SelectedBuild): {
   };
 }
 
+export function getWarningSteps(build: SelectedBuild): Set<string> {
+  const steps = new Set<string>();
+
+  if (build.frame && build.motor) {
+    const frameIs5inch = build.frame.specs.tamanho === '5"';
+    const frameIs7inch = build.frame.specs.tamanho === '7"';
+    const motorSize = parseInt(build.motor.specs.tamanho) || 0;
+    if ((frameIs5inch && motorSize >= 2800) || (frameIs7inch && motorSize < 2300)) {
+      steps.add('frame');
+      steps.add('motor');
+    }
+  }
+
+  if (build.esc && build.motor) {
+    const escCurrent = parseInt(build.esc.specs.corrente) || 0;
+    const motorKv = parseInt(build.motor.specs.kv) || 0;
+    if (motorKv > 2400 && escCurrent < 40) {
+      steps.add('esc');
+      steps.add('motor');
+    }
+  }
+
+  if (build.battery && build.motor) {
+    const batteryCells = parseInt(build.battery.specs.células) || 4;
+    const motorVoltage = build.motor.specs.tensão || '4S';
+    if (batteryCells === 6 && !motorVoltage.includes('6S')) {
+      steps.add('battery');
+      steps.add('motor');
+    }
+  }
+
+  if (build.camera && build.vtx) {
+    const cameraIsDJI = build.camera.id.includes('digital') || build.camera.brand === 'DJI';
+    const vtxIsDJI = build.vtx.id.includes('dji');
+    if (cameraIsDJI && !vtxIsDJI) {
+      steps.add('camera');
+      steps.add('vtx');
+    }
+  }
+
+  if (build.receiver && build.radio) {
+    const rxIsELRS = build.receiver.specs.protocolo === 'ExpressLRS';
+    const radioSupportsELRS = build.radio.specs.protocolo?.includes('ELRS') ?? false;
+    if (rxIsELRS && !radioSupportsELRS) {
+      steps.add('receiver');
+      steps.add('radio');
+    }
+  }
+
+  return steps;
+}
+
 export function getComponentsForCategory(
   components: DroneComponent[],
   categoryId: string

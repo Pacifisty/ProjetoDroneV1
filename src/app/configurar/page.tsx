@@ -4,7 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { DroneComponent, SelectedBuild } from '@/lib/types';
 import { DRONE_COMPONENTS, CONFIGURATOR_STEPS, ASSEMBLY_PRICE } from '@/lib/droneData';
-import { calculateBuildSummary, getComponentsForCategory, getWarningSteps } from '@/lib/compatibility';
+import { calculateBuildSummary, getComponentsForCategory } from '@/lib/compatibility';
+import { useCart } from '@/contexts/CartContext';
 
 const COMPONENT_TYPE_MAP: Record<string, keyof SelectedBuild> = {
   frame: 'frame',
@@ -174,6 +175,7 @@ export default function DroneConfigurator() {
 function DroneConfiguratorInner() {
   const searchParams = useSearchParams();
   const categoriaParam = searchParams.get('categoria') || '';
+  const { addItem } = useCart();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(categoriaParam);
@@ -181,6 +183,7 @@ function DroneConfiguratorInner() {
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [quoteForm, setQuoteForm] = useState({ name: '', email: '', phone: '' });
   const [quoteSent, setQuoteSent] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     if (categoriaParam) {
@@ -501,6 +504,18 @@ function DroneConfiguratorInner() {
                         className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-orange-500/25"
                       >
                         🛒 Solicitar orçamento
+                      </button>
+                      <button
+                        onClick={() => {
+                          (Object.values(build).filter((c): c is NonNullable<typeof c> => c != null)).forEach((c) => {
+                            addItem({ id: c.id, name: c.name, brand: c.brand, type: c.type, price: c.price });
+                          });
+                          setAddedToCart(true);
+                          setTimeout(() => setAddedToCart(false), 3000);
+                        }}
+                        className={`flex-1 px-6 py-4 rounded-xl font-bold text-lg transition-all hover:scale-105 text-center ${addedToCart ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white border border-slate-600'}`}
+                      >
+                        {addedToCart ? '✓ Adicionado!' : '🛍️ Adicionar ao carrinho'}
                       </button>
                       <a
                         href={`https://wa.me/5511999999999?text=${encodeURIComponent(

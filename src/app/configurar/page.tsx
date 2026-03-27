@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { DroneComponent, SelectedBuild } from '@/lib/types';
 import { DRONE_COMPONENTS, CONFIGURATOR_STEPS, ASSEMBLY_PRICE } from '@/lib/droneData';
-import { calculateBuildSummary, getComponentsForCategory } from '@/lib/compatibility';
+import { calculateBuildSummary, getComponentsForCategory, getWarningSteps } from '@/lib/compatibility';
 
 const COMPONENT_TYPE_MAP: Record<string, keyof SelectedBuild> = {
   frame: 'frame',
@@ -21,6 +21,13 @@ const COMPONENT_TYPE_MAP: Record<string, keyof SelectedBuild> = {
 
 function formatPrice(p: number): string {
   return p.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function getStepTabClass(isCurrent: boolean, isDone: boolean, hasWarning: boolean): string {
+  if (hasWarning) return 'tab-warning-blink border';
+  if (isCurrent) return 'bg-orange-500 text-white transition-all';
+  if (isDone) return 'bg-green-500/20 text-green-400 border border-green-500/30 transition-all';
+  return 'bg-slate-800 text-slate-400 border border-slate-700 hover:border-orange-500/50 transition-all';
 }
 
 function ComponentCard({
@@ -219,6 +226,7 @@ function DroneConfiguratorInner() {
       : undefined;
 
   const summary = calculateBuildSummary(build);
+  const warningSteps = getWarningSteps(build);
 
   const handleSendQuote = () => {
     const text = encodeURIComponent(
@@ -290,19 +298,15 @@ function DroneConfiguratorInner() {
               const key = COMPONENT_TYPE_MAP[step.id];
               const isDone = key ? !!build[key] : false;
               const isCurrent = index === currentStep;
+              const hasWarning = !isCurrent && warningSteps.has(step.id);
               return (
                 <button
                   key={step.id}
                   onClick={() => setCurrentStep(index)}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-1 ${
-                    isCurrent
-                      ? 'bg-orange-500 text-white'
-                      : isDone
-                      ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                      : 'bg-slate-800 text-slate-400 border border-slate-700 hover:border-orange-500/50'
-                  }`}
+                  className={`px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1 ${getStepTabClass(isCurrent, isDone, hasWarning)}`}
                 >
-                  {isDone && !isCurrent && <span>✓</span>}
+                  {hasWarning && <span>⚠️</span>}
+                  {isDone && !isCurrent && !hasWarning && <span>✓</span>}
                   {step.label}
                 </button>
               );

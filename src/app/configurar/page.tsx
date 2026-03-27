@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { DroneComponent, SelectedBuild } from '@/lib/types';
 import { DRONE_COMPONENTS, CONFIGURATOR_STEPS, ASSEMBLY_PRICE } from '@/lib/droneData';
-import { calculateBuildSummary, getComponentsForCategory } from '@/lib/compatibility';
+import { calculateBuildSummary, getComponentsForCategory, getWarningSteps } from '@/lib/compatibility';
 import { useCart } from '@/contexts/CartContext';
 
 const COMPONENT_TYPE_MAP: Record<string, keyof SelectedBuild> = {

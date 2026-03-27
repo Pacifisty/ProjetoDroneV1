@@ -20,6 +20,11 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  const switchMode = (newMode: Mode) => {
+    setMode(newMode);
+    setError('');
+  };
+
   useEffect(() => {
     if (!loading && user) router.replace('/perfil');
   }, [user, loading, router]);
@@ -235,7 +240,7 @@ export default function LoginPage() {
               <>
                 Não tem uma conta?{' '}
                 <button
-                  onClick={() => { setMode('register'); setError(''); }}
+                  onClick={() => switchMode('register')}
                   className="text-orange-400 hover:text-orange-300 font-medium transition-colors"
                 >
                   Criar conta
@@ -245,7 +250,7 @@ export default function LoginPage() {
               <>
                 Já tem uma conta?{' '}
                 <button
-                  onClick={() => { setMode('login'); setError(''); }}
+                  onClick={() => switchMode('login')}
                   className="text-orange-400 hover:text-orange-300 font-medium transition-colors"
                 >
                   Entrar

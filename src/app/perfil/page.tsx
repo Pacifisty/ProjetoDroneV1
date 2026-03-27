@@ -35,6 +35,11 @@ export default function PerfilPage() {
     setEditing(false);
   };
 
+  const handleNameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleSave();
+    if (e.key === 'Escape') setEditing(false);
+  };
+
   const handleSignOut = () => {
     signOut();
     router.push('/');
@@ -102,7 +107,7 @@ export default function PerfilPage() {
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-center focus:outline-none focus:border-orange-500 text-sm"
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') setEditing(false); }}
+                    onKeyDown={handleNameKeyDown}
                     autoFocus
                   />
                   <div className="flex gap-2 mt-2">

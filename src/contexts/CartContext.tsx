@@ -38,11 +38,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const persist = useCallback((newItems: CartItem[]) => {
-    setItems(newItems);
-    localStorage.setItem(CART_KEY, JSON.stringify(newItems));
-  }, []);
-
   const addItem = useCallback((item: Omit<CartItem, 'quantity'>) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
@@ -72,8 +67,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const clearCart = useCallback(() => {
-    persist([]);
-  }, [persist]);
+    setItems([]);
+    localStorage.setItem(CART_KEY, JSON.stringify([]));
+  }, []);
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);

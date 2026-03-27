@@ -84,7 +84,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!entry) throw new Error('E-mail não encontrado. Crie uma conta primeiro.');
     if (entry.password !== password) throw new Error('Senha incorreta.');
     persist(entry.user);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persist]);
 
   const signUpWithEmail = useCallback(async (name: string, email: string, password: string) => {
@@ -102,7 +101,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     users[key] = { password, user: newUser };
     saveUsers(users);
     persist(newUser);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persist]);
 
   const signInWithGoogle = useCallback(async () => {

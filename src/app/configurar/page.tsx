@@ -503,8 +503,8 @@ function DroneConfiguratorInner() {
                       </button>
                       <button
                         onClick={() => {
-                          Object.values(build).filter(Boolean).forEach((c) => {
-                            addItem({ id: c!.id, name: c!.name, brand: c!.brand, type: c!.type, price: c!.price });
+                          (Object.values(build).filter((c): c is NonNullable<typeof c> => c != null)).forEach((c) => {
+                            addItem({ id: c.id, name: c.name, brand: c.brand, type: c.type, price: c.price });
                           });
                           setAddedToCart(true);
                           setTimeout(() => setAddedToCart(false), 3000);

@@ -38,7 +38,7 @@ interface DronePreviewPanelProps {
 }
 
 export default function DronePreviewPanel({ componentType, componentName, componentImage }: DronePreviewPanelProps) {
-  const imageUrl = componentImage ?? (componentType && COMPONENT_IMAGES[componentType]) ?? DEFAULT_IMAGE;
+  const imageUrl = componentImage || (componentType && COMPONENT_IMAGES[componentType]) || DEFAULT_IMAGE;
 
   return (
     <div className="bg-slate-800 rounded-2xl border border-slate-700 p-4">

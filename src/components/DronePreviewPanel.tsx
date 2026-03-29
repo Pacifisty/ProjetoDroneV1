@@ -3,27 +3,28 @@
 import Image from 'next/image';
 
 const COMPONENT_IMAGES: Record<string, string> = {
-  frame: 'https://placehold.co/400x400/1e293b/f97316?text=🛩️+Frame',
-  motor: 'https://placehold.co/400x400/1e293b/f97316?text=⚙️+Motor',
-  esc: 'https://placehold.co/400x400/1e293b/f97316?text=🔌+ESC',
-  'flight-controller': 'https://placehold.co/400x400/1e293b/f97316?text=🧠+FC',
-  propeller: 'https://placehold.co/400x400/1e293b/f97316?text=🌀+Hélice',
-  battery: 'https://placehold.co/400x400/1e293b/f97316?text=🔋+Bateria',
-  camera: 'https://placehold.co/400x400/1e293b/f97316?text=📷+Câmera',
-  vtx: 'https://placehold.co/400x400/1e293b/f97316?text=📡+VTX',
-  receiver: 'https://placehold.co/400x400/1e293b/f97316?text=📻+Receptor',
-  radio: 'https://placehold.co/400x400/1e293b/f97316?text=🎮+Rádio',
+  frame: 'https://placehold.co/400x400/1e293b/f97316?text=Frame',
+  motor: 'https://placehold.co/400x400/1e293b/f97316?text=Motor',
+  esc: 'https://placehold.co/400x400/1e293b/f97316?text=ESC',
+  'flight-controller': 'https://placehold.co/400x400/1e293b/f97316?text=FC',
+  propeller: 'https://placehold.co/400x400/1e293b/f97316?text=Helice',
+  battery: 'https://placehold.co/400x400/1e293b/f97316?text=Bateria',
+  camera: 'https://placehold.co/400x400/1e293b/f97316?text=Camera',
+  vtx: 'https://placehold.co/400x400/1e293b/f97316?text=VTX',
+  receiver: 'https://placehold.co/400x400/1e293b/f97316?text=Receptor',
+  radio: 'https://placehold.co/400x400/1e293b/f97316?text=Radio',
 };
 
-const DEFAULT_IMAGE = 'https://placehold.co/400x400/1e293b/f97316?text=🚁+Drone';
+const DEFAULT_IMAGE = 'https://placehold.co/400x400/1e293b/f97316?text=Drone';
 
 interface DronePreviewPanelProps {
   componentType?: string;
   componentName?: string;
+  componentImage?: string;
 }
 
-export default function DronePreviewPanel({ componentType, componentName }: DronePreviewPanelProps) {
-  const imageUrl = (componentType && COMPONENT_IMAGES[componentType]) ?? DEFAULT_IMAGE;
+export default function DronePreviewPanel({ componentType, componentName, componentImage }: DronePreviewPanelProps) {
+  const imageUrl = componentImage ?? (componentType && COMPONENT_IMAGES[componentType]) ?? DEFAULT_IMAGE;
 
   return (
     <div className="bg-slate-800 rounded-2xl border border-slate-700 p-4">
@@ -36,6 +37,7 @@ export default function DronePreviewPanel({ componentType, componentName }: Dron
           src={imageUrl}
           alt={componentName ?? componentType ?? 'Drone'}
           fill
+          unoptimized
           className="object-contain"
         />
       </div>

@@ -566,6 +566,7 @@ function DroneConfiguratorInner() {
             <DronePreviewPanel
                 componentType={componentType}
                 componentName={selectedForCurrentStep?.name}
+                componentImage={selectedForCurrentStep?.image}
               />
           </div>
         </div>

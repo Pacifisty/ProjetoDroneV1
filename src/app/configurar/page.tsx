@@ -6,6 +6,7 @@ import { DroneComponent, SelectedBuild } from '@/lib/types';
 import { DRONE_COMPONENTS, CONFIGURATOR_STEPS, ASSEMBLY_PRICE } from '@/lib/droneData';
 import { calculateBuildSummary, getComponentsForCategory, getWarningSteps } from '@/lib/compatibility';
 import { useCart } from '@/contexts/CartContext';
+import DronePreviewPanel from '@/components/DronePreviewPanel';
 
 const COMPONENT_TYPE_MAP: Record<string, keyof SelectedBuild> = {
   frame: 'frame',
@@ -560,8 +561,9 @@ function DroneConfiguratorInner() {
           </div>
 
           {/* Sidebar summary */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block space-y-6">
             <BuildSummaryPanel build={build} />
+            <DronePreviewPanel />
           </div>
         </div>
       </div>

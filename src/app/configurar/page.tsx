@@ -563,7 +563,10 @@ function DroneConfiguratorInner() {
           {/* Sidebar summary */}
           <div className="hidden lg:block space-y-6">
             <BuildSummaryPanel build={build} />
-            <DronePreviewPanel />
+            <DronePreviewPanel
+                componentType={componentType}
+                componentName={selectedForCurrentStep?.name}
+              />
           </div>
         </div>
       </div>

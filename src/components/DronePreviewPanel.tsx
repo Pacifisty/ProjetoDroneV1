@@ -2,20 +2,34 @@
 
 import Image from 'next/image';
 
+function escapeXml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+function generatePlaceholderSVG(label: string): string {
+  const safeLabel = escapeXml(label);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#1e293b"/>
+  <text x="200" y="215" font-family="sans-serif" font-size="48" font-weight="bold" fill="#f97316" text-anchor="middle" dominant-baseline="middle">${safeLabel}</text>
+</svg>`;
+  const encoded = encodeURIComponent(svg).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16)));
+  return `data:image/svg+xml;base64,${btoa(encoded)}`;
+}
+
 const COMPONENT_IMAGES: Record<string, string> = {
-  frame: 'https://placehold.co/400x400/1e293b/f97316?text=Frame',
-  motor: 'https://placehold.co/400x400/1e293b/f97316?text=Motor',
-  esc: 'https://placehold.co/400x400/1e293b/f97316?text=ESC',
-  'flight-controller': 'https://placehold.co/400x400/1e293b/f97316?text=FC',
-  propeller: 'https://placehold.co/400x400/1e293b/f97316?text=Helice',
-  battery: 'https://placehold.co/400x400/1e293b/f97316?text=Bateria',
-  camera: 'https://placehold.co/400x400/1e293b/f97316?text=Camera',
-  vtx: 'https://placehold.co/400x400/1e293b/f97316?text=VTX',
-  receiver: 'https://placehold.co/400x400/1e293b/f97316?text=Receptor',
-  radio: 'https://placehold.co/400x400/1e293b/f97316?text=Radio',
+  frame: generatePlaceholderSVG('Frame'),
+  motor: generatePlaceholderSVG('Motor'),
+  esc: generatePlaceholderSVG('ESC'),
+  'flight-controller': generatePlaceholderSVG('FC'),
+  propeller: generatePlaceholderSVG('Hélice'),
+  battery: generatePlaceholderSVG('Bateria'),
+  camera: generatePlaceholderSVG('Câmera'),
+  vtx: generatePlaceholderSVG('VTX'),
+  receiver: generatePlaceholderSVG('Receptor'),
+  radio: generatePlaceholderSVG('Rádio'),
 };
 
-const DEFAULT_IMAGE = 'https://placehold.co/400x400/1e293b/f97316?text=Drone';
+const DEFAULT_IMAGE = generatePlaceholderSVG('Drone');
 
 interface DronePreviewPanelProps {
   componentType?: string;

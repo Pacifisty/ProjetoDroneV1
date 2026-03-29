@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request) {
+export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const name = searchParams.get('name');
     const brand = searchParams.get('brand');
@@ -21,7 +21,7 @@ export async function GET(request) {
             const data = await response.json();
             const images = data.images_results.slice(0, 10);
             return images;
-        } catch (error) {
+        } catch {
             if (!fallback) {
                 return query(true);
             }

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eab308"/>
+      <stop offset="100%" style="stop-color:#f97316"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="650" cy="80" r="180" fill="#eab308" opacity="0.08"/>
+  <circle cx="150" cy="320" r="140" fill="#f97316" opacity="0.08"/>
+  <!-- Speed lines -->
+  <line x1="50" y1="170" x2="220" y2="170" stroke="#eab308" stroke-width="2" opacity="0.3" stroke-dasharray="8,6"/>
+  <line x1="50" y1="200" x2="180" y2="200" stroke="#eab308" stroke-width="2" opacity="0.2" stroke-dasharray="8,6"/>
+  <line x1="50" y1="230" x2="200" y2="230" stroke="#eab308" stroke-width="2" opacity="0.25" stroke-dasharray="8,6"/>
+  <!-- Drone body (aerodynamic) -->
+  <polygon points="400,185 450,195 400,215 350,195" fill="url(#accent)" opacity="0.9"/>
+  <!-- Arms -->
+  <line x1="370" y1="190" x2="300" y2="148" stroke="#eab308" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+  <line x1="430" y1="190" x2="500" y2="148" stroke="#eab308" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+  <line x1="370" y1="210" x2="300" y2="252" stroke="#eab308" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+  <line x1="430" y1="210" x2="500" y2="252" stroke="#eab308" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+  <!-- Motors -->
+  <circle cx="295" cy="143" r="20" fill="#f97316" opacity="0.9"/>
+  <circle cx="505" cy="143" r="20" fill="#f97316" opacity="0.9"/>
+  <circle cx="295" cy="257" r="20" fill="#f97316" opacity="0.9"/>
+  <circle cx="505" cy="257" r="20" fill="#f97316" opacity="0.9"/>
+  <!-- Propellers (spinning effect) -->
+  <ellipse cx="295" cy="143" rx="45" ry="5" fill="#eab308" opacity="0.6" transform="rotate(-15, 295, 143)"/>
+  <ellipse cx="505" cy="143" rx="45" ry="5" fill="#eab308" opacity="0.6" transform="rotate(15, 505, 143)"/>
+  <ellipse cx="295" cy="257" rx="45" ry="5" fill="#eab308" opacity="0.6" transform="rotate(15, 295, 257)"/>
+  <ellipse cx="505" cy="257" rx="45" ry="5" fill="#eab308" opacity="0.6" transform="rotate(-15, 505, 257)"/>
+  <!-- FPV camera -->
+  <rect x="385" y="188" width="30" height="22" rx="4" fill="#1e293b" opacity="0.9" stroke="#eab308" stroke-width="2"/>
+  <circle cx="400" cy="199" r="7" fill="#0f172a" opacity="0.9" stroke="#f97316" stroke-width="1.5"/>
+  <!-- Text -->
+  <text x="400" y="315" font-family="sans-serif" font-size="28" font-weight="bold" fill="white" text-anchor="middle" opacity="0.95">FPV Racing</text>
+  <text x="400" y="345" font-family="sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle">Alta velocidade · Baixa latência · Adrenalina</text>
+</svg>

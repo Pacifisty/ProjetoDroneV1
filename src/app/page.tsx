@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { DRONE_CATEGORIES } from '@/lib/droneData';
 
@@ -135,7 +136,17 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {DRONE_CATEGORIES.map((cat) => (
               <Link key={cat.id} href={`/configurar?categoria=${cat.id}`}>
-                <div className="group bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 cursor-pointer h-full">
+                <div className="group bg-slate-800 rounded-2xl border border-slate-700 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 cursor-pointer h-full overflow-hidden">
+                  <div className="relative w-full h-40">
+                    <Image
+                      src={cat.image}
+                      alt={cat.name}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
+                  <div className="p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-4xl">{cat.icon}</span>
                     <div>
@@ -158,6 +169,7 @@ export default function HomePage() {
                   </ul>
                   <div className="mt-4 text-orange-400 text-sm font-medium group-hover:text-orange-300 transition-colors">
                     Configurar agora →
+                  </div>
                   </div>
                 </div>
               </Link>

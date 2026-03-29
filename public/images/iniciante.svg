@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e"/>
+      <stop offset="100%" style="stop-color:#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="650" cy="80" r="180" fill="#22c55e" opacity="0.08"/>
+  <circle cx="150" cy="320" r="140" fill="#14b8a6" opacity="0.08"/>
+  <!-- Drone body -->
+  <rect x="360" y="185" width="80" height="30" rx="8" fill="url(#accent)" opacity="0.9"/>
+  <!-- Arms -->
+  <line x1="360" y1="192" x2="290" y2="155" stroke="#22c55e" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <line x1="440" y1="192" x2="510" y2="155" stroke="#22c55e" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <line x1="360" y1="213" x2="290" y2="250" stroke="#22c55e" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <line x1="440" y1="213" x2="510" y2="250" stroke="#22c55e" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <!-- Motors -->
+  <circle cx="285" cy="150" r="22" fill="#14b8a6" opacity="0.85"/>
+  <circle cx="515" cy="150" r="22" fill="#14b8a6" opacity="0.85"/>
+  <circle cx="285" cy="255" r="22" fill="#14b8a6" opacity="0.85"/>
+  <circle cx="515" cy="255" r="22" fill="#14b8a6" opacity="0.85"/>
+  <!-- Propellers -->
+  <ellipse cx="285" cy="150" rx="42" ry="6" fill="#22c55e" opacity="0.5" transform="rotate(-20, 285, 150)"/>
+  <ellipse cx="515" cy="150" rx="42" ry="6" fill="#22c55e" opacity="0.5" transform="rotate(20, 515, 150)"/>
+  <ellipse cx="285" cy="255" rx="42" ry="6" fill="#22c55e" opacity="0.5" transform="rotate(20, 285, 255)"/>
+  <ellipse cx="515" cy="255" rx="42" ry="6" fill="#22c55e" opacity="0.5" transform="rotate(-20, 515, 255)"/>
+  <!-- Text -->
+  <text x="400" y="315" font-family="sans-serif" font-size="28" font-weight="bold" fill="white" text-anchor="middle" opacity="0.95">Iniciante</text>
+  <text x="400" y="345" font-family="sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle">Fácil de voar · Robusto · Acessível</text>
+</svg>

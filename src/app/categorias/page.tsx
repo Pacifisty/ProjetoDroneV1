@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { DRONE_CATEGORIES } from '@/lib/droneData';
 
@@ -103,6 +104,15 @@ export default function CategoriasPage() {
                 className="bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden"
               >
                 <div className={`bg-gradient-to-r ${cat.color} p-0.5`} />
+                <div className="relative w-full h-52">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
                 <div className="p-8">
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main info */}

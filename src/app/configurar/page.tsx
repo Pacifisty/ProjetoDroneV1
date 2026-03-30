@@ -7,6 +7,7 @@ import { DRONE_COMPONENTS, CONFIGURATOR_STEPS, ASSEMBLY_PRICE } from '@/lib/dron
 import { calculateBuildSummary, getComponentsForCategory, getWarningSteps } from '@/lib/compatibility';
 import { useCart } from '@/contexts/CartContext';
 import DronePreviewPanel from '@/components/DronePreviewPanel';
+import { getVariationsForComponent } from '@/lib/imageVariations';
 
 const COMPONENT_TYPE_MAP: Record<string, keyof SelectedBuild> = {
   frame: 'frame',
@@ -173,6 +174,144 @@ export default function DroneConfigurator() {
   );
 }
 
+// ── Stacked Drone Preview ────────────────────────────────────────────────────
+// Shows all selected components as colour-coded layers, giving users a visual
+// overview of their full build with the chosen variation colours.
+
+const COMPONENT_TYPE_LABELS: Record<string, string> = {
+  frame: 'Frame',
+  motor: 'Motores',
+  esc: 'ESC',
+  flightController: 'Controladora',
+  propeller: 'Hélices',
+  battery: 'Bateria',
+  camera: 'Câmera',
+  vtx: 'VTX',
+  receiver: 'Receptor',
+  radio: 'Rádio',
+};
+
+function StackedDronePreview({
+  build,
+  selectedImageVariations,
+}: {
+  build: SelectedBuild;
+  selectedImageVariations: Record<string, string>;
+}) {
+  const components = Object.entries(build).filter((entry): entry is [string, NonNullable<SelectedBuild[keyof SelectedBuild]>] => entry[1] != null);
+
+  if (components.length === 0) return null;
+
+  return (
+    <div className="bg-slate-800 rounded-2xl border border-slate-700 p-4">
+      <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wider">
+        🚁 Drone montado
+      </h3>
+
+      {/* Visual layer stack */}
+      <div className="relative w-full rounded-xl bg-slate-900 border border-slate-700 overflow-hidden mb-4" style={{ minHeight: '200px' }}>
+        {/* Concentric rings as decorative drone silhouette */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-36 h-36">
+            {/* Outer ring (frame colour) */}
+            {(() => {
+              const frame = build.frame;
+              const varId = frame ? selectedImageVariations[frame.id] : undefined;
+              const vars = frame ? getVariationsForComponent(frame.id) : [];
+              const varColor = vars.find((v) => v.id === varId)?.color ?? '#334155';
+              return (
+                <div
+                  className="absolute inset-0 rounded-full border-4 opacity-90"
+                  style={{ borderColor: varColor }}
+                />
+              );
+            })()}
+            {/* Motor dots */}
+            {[
+              { top: '0%',  left: '50%', transform: 'translate(-50%, -50%)' },
+              { top: '50%', left: '0%',  transform: 'translate(-50%, -50%)' },
+              { top: '50%', left: '100%',transform: 'translate(-50%, -50%)' },
+              { top: '100%',left: '50%', transform: 'translate(-50%, -50%)' },
+            ].map((pos, i) => {
+              const motor = build.motor;
+              const varId = motor ? selectedImageVariations[motor.id] : undefined;
+              const vars = motor ? getVariationsForComponent(motor.id) : [];
+              const varColor = vars.find((v) => v.id === varId)?.color ?? '#3b82f6';
+              return (
+                <div
+                  key={i}
+                  className="absolute w-5 h-5 rounded-full border-2"
+                  style={{ ...pos, backgroundColor: varColor, borderColor: varColor }}
+                />
+              );
+            })}
+            {/* Centre (FC colour) */}
+            {(() => {
+              const fc = build.flightController;
+              const varId = fc ? selectedImageVariations[fc.id] : undefined;
+              const vars = fc ? getVariationsForComponent(fc.id) : [];
+              const varColor = vars.find((v) => v.id === varId)?.color ?? '#16a34a';
+              return (
+                <div
+                  className="absolute w-10 h-10 rounded-lg"
+                  style={{
+                    top: '50%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    backgroundColor: varColor,
+                  }}
+                />
+              );
+            })()}
+          </div>
+        </div>
+
+        {/* Propeller arcs */}
+        {build.propeller && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            {(() => {
+              const prop = build.propeller;
+              const varId = prop ? selectedImageVariations[prop.id] : undefined;
+              const vars = prop ? getVariationsForComponent(prop.id) : [];
+              const varColor = vars.find((v) => v.id === varId)?.color ?? '#1e293b';
+              return (
+                <div
+                  className="w-44 h-44 rounded-full border-2 opacity-30"
+                  style={{ borderColor: varColor }}
+                />
+              );
+            })()}
+          </div>
+        )}
+      </div>
+
+      {/* Component colour legend */}
+      <div className="grid grid-cols-2 gap-2">
+        {components.map(([key, comp]) => {
+          const varId = selectedImageVariations[comp.id];
+          const vars = getVariationsForComponent(comp.id);
+          const variation = vars.find((v) => v.id === varId);
+          return (
+            <div key={key} className="flex items-center gap-2 text-xs">
+              {variation ? (
+                <span
+                  className="w-3 h-3 rounded-full flex-shrink-0 border border-slate-600"
+                  style={{ backgroundColor: variation.color }}
+                />
+              ) : (
+                <span className="w-3 h-3 rounded-full flex-shrink-0 bg-slate-600" />
+              )}
+              <span className="text-slate-400 truncate">{COMPONENT_TYPE_LABELS[key] ?? key}</span>
+              {variation && (
+                <span className="text-slate-500 truncate">· {variation.label}</span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function DroneConfiguratorInner() {
   const searchParams = useSearchParams();
   const categoriaParam = searchParams.get('categoria') || '';
@@ -185,6 +324,8 @@ function DroneConfiguratorInner() {
   const [quoteForm, setQuoteForm] = useState({ name: '', email: '', phone: '' });
   const [quoteSent, setQuoteSent] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  // Maps component ID → chosen variation ID
+  const [selectedImageVariations, setSelectedImageVariations] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (categoriaParam) {
@@ -424,6 +565,14 @@ function DroneConfiguratorInner() {
                       )}
                     </div>
 
+                    {/* Stacked drone visual (main content – visible on all screen sizes) */}
+                    <div className="mb-8">
+                      <StackedDronePreview
+                        build={build}
+                        selectedImageVariations={selectedImageVariations}
+                      />
+                    </div>
+
                     {/* Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                       <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 text-center">
@@ -563,12 +712,29 @@ function DroneConfiguratorInner() {
           {/* Sidebar summary */}
           <div className="hidden lg:block space-y-6">
             <BuildSummaryPanel build={build} />
-            <DronePreviewPanel
+            {componentType === 'summary' ? (
+              <StackedDronePreview
+                build={build}
+                selectedImageVariations={selectedImageVariations}
+              />
+            ) : (
+              <DronePreviewPanel
                 componentType={componentType}
                 componentName={selectedForCurrentStep?.name}
                 componentBrand={selectedForCurrentStep?.brand}
                 componentImage={selectedForCurrentStep?.image}
+                variations={selectedForCurrentStep ? getVariationsForComponent(selectedForCurrentStep.id) : []}
+                selectedVariationId={selectedForCurrentStep ? selectedImageVariations[selectedForCurrentStep.id] : undefined}
+                onVariationChange={(varId) => {
+                  if (selectedForCurrentStep) {
+                    setSelectedImageVariations((prev) => ({
+                      ...prev,
+                      [selectedForCurrentStep.id]: varId,
+                    }));
+                  }
+                }}
               />
+            )}
           </div>
         </div>
       </div>

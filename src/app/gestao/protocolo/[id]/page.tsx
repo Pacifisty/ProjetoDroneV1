@@ -33,11 +33,21 @@ function formatDateShort(iso: string) {
 
 export default function ProtocoloDetailPage() {
   const params = useParams();
-  const { protocolos, setores, tramitar, updateProtocolo } = useGestao();
+  const { protocolos, setores, tramitar, updateProtocolo, loading } = useGestao();
   const [showTramModal, setShowTramModal] = useState(false);
   const [tramForm, setTramForm] = useState({ setorDestino: '', acao: 'encaminhamento' as AcaoTramitacao, observacao: '' });
 
   const proto = protocolos.find(p => p.id === params.id);
+
+  if (loading) {
+    return (
+      <div className="text-center py-16 text-slate-400">
+        <p className="text-4xl mb-4 animate-spin">⏳</p>
+        <p className="text-lg font-medium">Carregando...</p>
+      </div>
+    );
+  }
+
   if (!proto) {
     return (
       <div className="text-center py-16 text-slate-400">
@@ -50,9 +60,9 @@ export default function ProtocoloDetailPage() {
 
   function handleTramitar(e: React.FormEvent) {
     e.preventDefault();
-    if (!tramForm.setorDestino) return;
-    tramitar(proto!.id, {
-      setorOrigem: proto!.setorDestinoId,
+    if (!tramForm.setorDestino || !proto) return;
+    tramitar(proto.id, {
+      setorOrigem: proto.setorDestinoId,
       setorDestino: tramForm.setorDestino,
       acao: tramForm.acao,
       observacao: tramForm.observacao || undefined,

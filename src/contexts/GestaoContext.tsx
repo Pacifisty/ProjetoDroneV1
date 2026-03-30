@@ -11,6 +11,7 @@ interface GestaoContextValue {
   // Auth
   servidorAtual: ServidorPerfil | null;
   setServidorAtual: (s: ServidorPerfil | null) => void;
+  loading: boolean;
 
   // Data
   orgaos: Orgao[];
@@ -42,6 +43,7 @@ interface GestaoContextValue {
 const GestaoContext = createContext<GestaoContextValue | null>(null);
 
 export function GestaoProvider({ children }: { children: React.ReactNode }) {
+  const [loading, setLoading] = useState(true);
   const [servidorAtual, setServidorAtualState] = useState<ServidorPerfil | null>(null);
   const [orgaos, setOrgaos] = useState<Orgao[]>([]);
   const [setores, setSetores] = useState<Setor[]>([]);
@@ -76,6 +78,7 @@ export function GestaoProvider({ children }: { children: React.ReactNode }) {
         setServidorAtualState(srvs[0]);
       }
     }
+    setLoading(false);
   }, [refresh]);
 
   const setServidorAtual = useCallback((s: ServidorPerfil | null) => {
@@ -185,6 +188,7 @@ export function GestaoProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <GestaoContext.Provider value={{
+      loading,
       servidorAtual, setServidorAtual,
       orgaos, setores, servidores, tiposDocumento, protocolos, processos, auditLogs,
       addProtocolo, tramitar, updateProtocolo,

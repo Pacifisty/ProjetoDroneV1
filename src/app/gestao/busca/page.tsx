@@ -28,12 +28,15 @@ export default function BuscaPage() {
   const [filterDateTo, setFilterDateTo] = useState('');
   const [searched, setSearched] = useState(false);
 
+  const dateFrom = filterDateFrom ? new Date(filterDateFrom) : null;
+  const dateTo = filterDateTo ? new Date(filterDateTo + 'T23:59:59') : null;
+
   const filteredProtocolos = protocolos.filter(p => {
     if (filterTipo && p.tipoDocumentoId !== filterTipo) return false;
     if (filterStatus && p.status !== filterStatus) return false;
     if (filterSetor && p.setorDestinoId !== filterSetor && p.setorOrigemId !== filterSetor) return false;
-    if (filterDateFrom && p.dataCriacao < filterDateFrom) return false;
-    if (filterDateTo && p.dataCriacao > filterDateTo + 'T23:59:59') return false;
+    if (dateFrom && new Date(p.dataCriacao) < dateFrom) return false;
+    if (dateTo && new Date(p.dataCriacao) > dateTo) return false;
     if (query) {
       const q = query.toLowerCase();
       return (
@@ -48,8 +51,8 @@ export default function BuscaPage() {
   });
 
   const filteredProcessos = processos.filter(p => {
-    if (filterDateFrom && p.dataCriacao < filterDateFrom) return false;
-    if (filterDateTo && p.dataCriacao > filterDateTo + 'T23:59:59') return false;
+    if (dateFrom && new Date(p.dataCriacao) < dateFrom) return false;
+    if (dateTo && new Date(p.dataCriacao) > dateTo) return false;
     if (!query) return false;
     const q = query.toLowerCase();
     return (

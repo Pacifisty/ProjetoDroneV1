@@ -11,7 +11,10 @@ export default function RelatoriosPage() {
   const totalMes = protocolos.filter(p => new Date(p.dataCriacao) >= inicioMes).length;
   const concluidosMes = protocolos.filter(p => p.status === 'concluido' && new Date(p.dataCriacao) >= inicioMes).length;
   const urgentes = protocolos.filter(p => p.prioridade === 'urgente' && p.status !== 'concluido').length;
-  const vencidos = protocolos.filter(p => p.prazo && new Date(p.prazo) < hoje && p.status !== 'concluido' && p.status !== 'arquivado').length;
+  const vencidos = protocolos.filter(p => {
+    if (!p.prazo || p.status === 'concluido' || p.status === 'arquivado') return false;
+    return new Date(p.prazo) < hoje;
+  }).length;
 
   // Protocols per month (last 6 months)
   const months: { label: string; count: number }[] = [];

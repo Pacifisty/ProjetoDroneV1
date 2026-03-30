@@ -232,7 +232,7 @@ export const gestaoStore = {
   },
   generateNumeroProtocolo(siglaSetor: string): string {
     const year = new Date().getFullYear();
-    const counter = read<number>(KEYS.counter, 3) + 1;
+    const counter = read<number>(KEYS.counter, 0) + 1;
     write(KEYS.counter, counter);
     return `${year}/${siglaSetor}/${String(counter).padStart(6, '0')}`;
   },

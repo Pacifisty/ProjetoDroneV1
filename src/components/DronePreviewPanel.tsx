@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { ImageVariation } from '@/lib/imageVariations';
 
 function escapeXml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
@@ -39,6 +40,12 @@ interface DronePreviewPanelProps {
   componentName?: string;
   componentBrand?: string;
   componentImage?: string;
+  /** Available image colour / style variations for the current component. */
+  variations?: ImageVariation[];
+  /** ID of the currently selected variation. */
+  selectedVariationId?: string;
+  /** Called when the user picks a different variation. */
+  onVariationChange?: (variationId: string) => void;
 }
 
 export default function DronePreviewPanel({
@@ -46,8 +53,14 @@ export default function DronePreviewPanel({
   componentName,
   componentBrand,
   componentImage,
+  variations = [],
+  selectedVariationId,
+  onVariationChange,
 }: DronePreviewPanelProps) {
+  const selectedVariation = variations.find((v) => v.id === selectedVariationId);
+
   const getFallback = () =>
+    selectedVariation?.src ||
     componentImage ||
     (componentType ? COMPONENT_IMAGES[componentType] : undefined) ||
     DEFAULT_IMAGE;
@@ -56,6 +69,13 @@ export default function DronePreviewPanel({
   const [apiStatus, setApiStatus] = useState<ApiStatus>('idle');
 
   useEffect(() => {
+    // If a local variation is chosen, show it immediately without calling the API.
+    if (selectedVariation) {
+      setDisplayImage(selectedVariation.src);
+      setApiStatus('idle');
+      return;
+    }
+
     const fallback = getFallback();
     setDisplayImage(fallback);
     setApiStatus('idle');
@@ -96,7 +116,7 @@ export default function DronePreviewPanel({
       cancelled = true;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [componentName, componentBrand, componentType, componentImage]);
+  }, [componentName, componentBrand, componentType, componentImage, selectedVariationId]);
 
   return (
     <div className="bg-slate-800 rounded-2xl border border-slate-700 p-4">
@@ -147,6 +167,36 @@ export default function DronePreviewPanel({
           <p className="text-slate-500 text-xs">Selecione um componente para visualizar</p>
         )}
       </div>
+
+      {/* Variation colour swatches */}
+      {variations.length > 0 && onVariationChange && (
+        <div className="mt-3">
+          <p className="text-slate-400 text-xs mb-2">Cor / variação:</p>
+          <div className="flex flex-wrap gap-2">
+            {variations.map((v) => {
+              const isSelected = v.id === selectedVariationId;
+              return (
+                <button
+                  key={v.id}
+                  onClick={() => onVariationChange(v.id)}
+                  title={v.label}
+                  className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                    isSelected
+                      ? 'border-orange-500 scale-110 ring-2 ring-orange-500/40'
+                      : 'border-slate-600 hover:border-slate-400'
+                  }`}
+                  style={{ backgroundColor: v.color }}
+                  aria-label={v.label}
+                  aria-pressed={isSelected}
+                />
+              );
+            })}
+          </div>
+          {selectedVariation && (
+            <p className="text-slate-500 text-xs mt-1">{selectedVariation.label}</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

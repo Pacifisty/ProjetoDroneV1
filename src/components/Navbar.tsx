@@ -43,6 +43,15 @@ export default function Navbar() {
               Suporte
             </Link>
             <Link
+              href="/gestao"
+              className="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors text-sm font-medium border border-indigo-800 hover:border-indigo-600 px-3 py-1.5 rounded-lg"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              SisDoc
+            </Link>
+            <Link
               href="/configurar"
               className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
             >
@@ -142,6 +151,16 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
           >
             Suporte
+          </Link>
+          <Link
+            href="/gestao"
+            className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 py-2 text-sm font-medium"
+            onClick={() => setMenuOpen(false)}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            SisDoc Municipal
           </Link>
           <Link
             href="/configurar"
